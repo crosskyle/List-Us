@@ -1,0 +1,28 @@
+# Uncomment the next line to define a global platform for your project
+ platform :ios, '11.0'
+
+target 'groupLists' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for groupLists
+
+pod 'Firebase/Core'
+pod 'Firebase/Database'
+pod 'Firebase/Auth'
+
+pod 'GoogleToolboxForMac', '~> 2.1'
+
+  target 'groupListsTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+  target 'groupListsUITests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+
+
+end
