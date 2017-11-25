@@ -12,9 +12,8 @@ import Firebase
 class MessagingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     var userController: UserController!
-    var userEventsController: UserEventsController!
     var eventMessagesController = EventMessagesController()
-    var eventId: String!
+    var currentEvent: Event!
     
     let navigationLauncher = NavigationLauncher()
     let menuLauncher = MenuLauncher()
@@ -26,7 +25,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var textFieldView: UIView!
     @IBOutlet weak var navBtn: UIButton!
     @IBOutlet weak var menuBtn: UIButton!
-    
+    @IBOutlet weak var listNameLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +48,8 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         messageTableView.rowHeight = UITableViewAutomaticDimension
         messageTableView.estimatedRowHeight = 140
         
-        eventMessagesController.getMessages(userId: userController.user.id, eventId: eventId, messageTableView: messageTableView)
+        // Startup Firebase observer for getting messages
+        eventMessagesController.getMessages(userId: userController.user.id, eventId: currentEvent.id, messageTableView: messageTableView)
         
         messageTableView.separatorStyle = .none
         
@@ -61,13 +61,10 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         menuBtn.tintColor = UIColor.darkGray
         menuBtn.addTarget(self, action: #selector(displayMenu), for: .touchUpInside)
         
+        listNameLabel.text = currentEvent.name
+        
         //add contextual options to bottom fly-in menu bar
         menuLauncher.menuOptions.insert(MenuOption(name: "Back", iconName: "back"), at: 0)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navBtn.setTitle("", for: UIControlState.normal)
-        menuBtn.setTitle("", for: UIControlState.normal)
     }
     
     @IBAction func sendButtonTapped(_ sender: UIButton) {
@@ -75,7 +72,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         messageTextField.isEnabled = false
         sendButton.isEnabled = false
         
-        eventMessagesController.createMessage(userController: userController, eventId: eventId, messageTextField: messageTextField, sendButton: sendButton, date: Date())
+        eventMessagesController.createMessage(userController: userController, eventId: currentEvent.id, messageTextField: messageTextField, sendButton: sendButton, date: Date())
     }
     
     
@@ -164,7 +161,8 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
             //logout via firebase
             do {
                 try Auth.auth().signOut()
-                performSegue(withIdentifier: "returnToLogin", sender: self)
+                let welcomeViewController = self.storyboard?.instantiateViewController(withIdentifier: "InitialNavController")
+                UIApplication.shared.keyWindow?.rootViewController = welcomeViewController
                 
             } catch {
                 print("A logout error occured")

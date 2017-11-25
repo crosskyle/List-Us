@@ -8,12 +8,26 @@
 
 import UIKit
 
+class userButton: UIButton {
+    
+    var user: AuthorizedUser?
+    
+    required init() {
+        super.init(frame: CGRect.zero)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class ManipulateUsersCellTableViewCell: UITableViewCell {
 
     //cell which displays a remove button, a user name, and user privileges
-    var removeBtn = UIButton()
+    var removeBtn = userButton()
     var userName = UILabel()
     var userPrivileges = UILabel()
+    var user: AuthorizedUser!
     var userIndex: Int!
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {

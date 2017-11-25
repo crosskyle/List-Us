@@ -11,10 +11,6 @@ import Firebase
 
 private let reuseIdentifier = "eventCell"
 
-
-var testItems: [Item] = [Item(name: "Backpack", id: "ID#12", userID: "USERID#34343", description: "A container to hold items", quantity: 1), Item(name: "Crock Pot", id: "ID#32", userID: "USERID#543", description: "Cookware", quantity: 1), Item(name: "Plates", id: "ID#68", userID: "USERID#99973", description: "For all attendees to eat off of...", quantity: 15), Item(name: "Gas Grill", id: "ID#8", userID: "USERID#87", description: "So we can cook the meat", quantity: 2)]
-
-
 class EventCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     var userController : UserController!
@@ -42,19 +38,15 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         self.eventCollectionView.delegate = self
         self.eventCollectionView.dataSource = self
 
-        navBtn.setImage(UIImage(named: "menu2x"), for: UIControlState.normal)
         navBtn.showsTouchWhenHighlighted = true
         navBtn.tintColor = UIColor.darkGray
         navBtn.addTarget(self, action: #selector(displayNav), for: .touchUpInside)
         
-        menuBtn.setImage(UIImage(named: "filledmenu"), for: UIControlState.normal)
         menuBtn.showsTouchWhenHighlighted = true
         menuBtn.setImage(UIImage(named: "menu"), for: UIControlState.highlighted)
         menuBtn.showsTouchWhenHighlighted = true
         menuBtn.tintColor = UIColor.black
-        self.view.addConstraint(NSLayoutConstraint(item: menuBtn, attribute: .centerY, relatedBy: .equal, toItem: navBtn, attribute: .centerY, multiplier: 1, constant: 0))
         menuBtn.addTarget(self, action: #selector(displayMenu), for: .touchUpInside)
-        
         
         //get all events for this user
         userEventsController.getDBEvents(userId: userController.user.id, eventCollectionView: self.eventCollectionView)
@@ -70,8 +62,6 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        navBtn.setTitle("", for: UIControlState.normal)
-        menuBtn.setTitle("", for: UIControlState.normal)
         self.eventCollectionView.reloadData()
     }
 
@@ -224,7 +214,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
 
         }
 
-        UIView.animate(withDuration: 1.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             
             //build array of all views needed for dynamic button overlay
             let views = ["blurBackground": self.blurBackground, "blurBackgroundContent": self.blurBackground.contentView, "optionsFrame": self.optionsFrame, "editButton": self.editButton, "deleteButton": self.deleteButton, "addUsersButton": self.addUsersButton]
@@ -316,9 +306,10 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         //populate instance with dependent vars
         manipulateUsersVC.userEventsController = self.userEventsController
         manipulateUsersVC.userController = self.userController
-        manipulateUsersVC.currentEventIdx = sender.tag
+        manipulateUsersVC.currentEventIdx = self.editIdx
         manipulateUsersVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-
+        
+        //show modal VC
         present(manipulateUsersVC, animated: true, completion: nil)
         
     }
@@ -331,14 +322,12 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             let tabBarViewControllers = segue.destination as! UITabBarController
             
             let itemListVC = tabBarViewControllers.viewControllers![0] as! ItemListViewController
-            itemListVC.currentEventIdx = selectedIndexPath.item
-            itemListVC.userEventsController = self.userEventsController
             itemListVC.userController = self.userController
+            itemListVC.currentEvent = self.userEventsController.events[selectedIndexPath.item]
             
             let messagingVC = tabBarViewControllers.viewControllers![1] as! MessagingViewController
-            messagingVC.eventId = userEventsController.events[selectedIndexPath.item].id
-            messagingVC.userEventsController = self.userEventsController
             messagingVC.userController = self.userController
+            messagingVC.currentEvent = self.userEventsController.events[selectedIndexPath.item]
         
         } else if segue.identifier == "addEvent" {
             
@@ -435,7 +424,8 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             //logout via firebase
             do {
                 try Auth.auth().signOut()
-                performSegue(withIdentifier: "returnToLogin", sender: self)
+                let welcomeViewController = self.storyboard?.instantiateViewController(withIdentifier: "InitialNavController")
+                UIApplication.shared.keyWindow?.rootViewController = welcomeViewController
             } catch {
                 print("A logout error occured")
             }

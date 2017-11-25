@@ -101,9 +101,7 @@ class MenuLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource, UICo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath) as! MenuCell
         
         cell.option = menuOptions[indexPath.item]
-        //cell.nameLabel = setting.name
-        //cell.iconImageView.image = UIImage(named: setting.icon)
-        //cell.backgroundColor = UIColor.white
+
         return cell
     }
     

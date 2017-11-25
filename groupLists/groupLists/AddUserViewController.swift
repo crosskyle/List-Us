@@ -32,7 +32,7 @@ class AddUserViewController: UIViewController {
         let eventID = userEventsController.events[eventIdx].id
         let email = userEmail.text ?? ""
         
-        userEventsController.addUserToEvent(eventID: eventID, eventIdx: eventIdx, email: email, permissions: permissions, addUserVC: self)
+        //userEventsController.addUserToEvent(eventID: eventID, eventIdx: eventIdx, email: email, permissions: permissions, addUserVC: self)
     }
     
     override func viewDidLoad() {
@@ -73,7 +73,8 @@ class AddUserViewController: UIViewController {
             //logout via firebase
             do {
                 try Auth.auth().signOut()
-                performSegue(withIdentifier: "returnToLogin", sender: self)
+                let welcomeViewController = self.storyboard?.instantiateViewController(withIdentifier: "InitialNavController")
+                UIApplication.shared.keyWindow?.rootViewController = welcomeViewController
                 
             } catch {
                 print("A logout error occured")

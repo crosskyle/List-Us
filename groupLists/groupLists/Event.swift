@@ -11,6 +11,7 @@ import Foundation
 struct AuthorizedUser {
     var userId: String
     var userName: String
+    var userEmail: String
     var permissions: Bool
 }
 

@@ -27,6 +27,11 @@ struct DB {
     static let quantity = "quantity"
     static let picture = "picture"
     static let user = "user"
+    static let suggestor = "suggestorUserID"
+    static let voteCount = "voteCount"
+    static let positiveVoterUserID = "positiveVoterUserID"
+    static let negativeVoterUserID = "negativeVoterUserID"
+    static let imageURL = "imageURL"
     
     static let messages = "messages"
     static let senderName = "senderName"

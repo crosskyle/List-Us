@@ -140,23 +140,23 @@ class ManipulateUsersController: UIViewController, UITableViewDataSource, UITabl
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "userCell", for: indexPath) as! ManipulateUsersCellTableViewCell
         
-        let currentUser = userEventsController.events[currentEventIdx].authorizedUsers[indexPath.row]
+        cell.user = userEventsController.events[currentEventIdx].authorizedUsers[indexPath.row]
+        cell.removeBtn.user = cell.user
         
-        //cell.userName = UILabel()
+        //hide (disallow) remove button on self user
+        if (cell.user.userName == (self.userController.user.firstName + " " + self.userController.user.lastName)) {
+            cell.removeBtn.isHidden = true
+        }
         cell.userIndex = indexPath.row
-        cell.userName.text = currentUser.userName
+        cell.userName.text = cell.user.userName
         
-        //cell.userPrivileges = UILabel()
-        
-        if currentUser.permissions == true {
+        //display user privilege level
+        if userEventsController.events[currentEventIdx].authorizedUsers[indexPath.row].permissions == true {
             cell.userPrivileges.text = "Organizer"
         }
         else {
             cell.userPrivileges.text = "Basic"
         }
-        
-        
-        //cell.removeImage = UIButton()
         
         cell.removeBtn.tag = cell.userIndex
         cell.removeBtn.addTarget(self, action: #selector(removeUser(sender:)), for: .touchUpInside)
@@ -174,29 +174,51 @@ class ManipulateUsersController: UIViewController, UITableViewDataSource, UITabl
     
     func addUser(sender: Any) {
         
+        var duplicateFound = false
+        
         //add user to user array if string argument is not empty string
         if self.userInputTextField.text != "" {
             
-            //unwrap as if condition verifies not nil
-            userEventsController.addUserToEvent(eventID: userEventsController.events[currentEventIdx].id, eventIdx: currentEventIdx, email: self.userInputTextField.text!, permissions: privilegesToggle.isOn, addUserVC: self)
-            
-            DispatchQueue.main.async {
-                self.currentUsersTableView.reloadData()
+            //verify user is not already authorized using unique email attribute
+            for users in self.userEventsController.events[currentEventIdx].authorizedUsers {
                 
+                //if already authorized, set bool
+                if users.userEmail == self.userInputTextField.text {
+                    
+                    duplicateFound = true
+                }
             }
-            tableViewHeight = rowHeight * CGFloat(userEventsController.events[currentEventIdx].authorizedUsers.count) //3 * currentUsersTableView.rowHeight
-
-            self.updateViewConstraints()
-            self.userInputTextField.text = ""
             
+            //if not unique entry
+            if duplicateFound {
+                
+                //notify user of existing status
+                let duplicateUserAlert = UIAlertController(title: "Duplicate User", message: "That that user can already see and use this event. To change permissions, remove the user and re-add with the new desired privilege level.", preferredStyle: UIAlertControllerStyle.alert)
+                let okAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: { (okAction) in
+                    self.userInputTextField.text = ""
+                })
+                duplicateUserAlert.addAction(okAction)
+                
+                //present alert VC
+                self.present(duplicateUserAlert, animated: true, completion: nil)
+                
+            //if unique user entry, add user
+            } else {
+
+                //unwrap as if condition verifies not nil - firebase callback fire reloadData() and updateViewConstraints() @ correct time
+                userEventsController.addUserToEvent(eventID: userEventsController.events[currentEventIdx].id, eventIdx: currentEventIdx, email: self.userInputTextField.text!, permissions: privilegesToggle.isOn, addUserVC: self)
+                
+                //reset input field
+                self.userInputTextField.text = ""
+            
+            }
+
         }
-        
     }
     
-    func removeUser(sender: UIButton) {
-        
-        print("Requested to remove user test")
-        
+    func removeUser(sender: userButton) {
+     
+        self.userEventsController.removeUserFromEvent(eventIdx: self.currentEventIdx, user: sender.user!, addUserVC: self)
     }
     
     func doneAdding(sender: Any) {
