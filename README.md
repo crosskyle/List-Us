@@ -1,4 +1,4 @@
-# groupList
+# Listus
 
 https://crosskyle.github.io
 
