@@ -37,9 +37,20 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
         listItemTableView.dataSource = self
         listItemTableView.delegate = self
         
+        //ensure new items count is displayed whenever view is shown
+        let creatorID = currentEvent.creator
+        var eventCreatorName : String = ""
+        
+        //iterate authorizedUsers, identify creator name to display
+        for user in currentEvent.authorizedUsers {
+            if user.userId == creatorID {
+                eventCreatorName = user.userName
+            }
+        }
+        
         // Startup firebase observers for getting, removing, and updating items
-        eventItemsController.getItemOnChildAdded(eventId: currentEvent.id, itemListTableView: listItemTableView)
-        eventItemsController.removeItemOnChildRemoved(eventId: currentEvent.id, itemListTableView: listItemTableView)
+        eventItemsController.getItemOnChildAdded(eventId: currentEvent.id, itemListTableView: listItemTableView, listInfoLabel: listInfoLabel, eventCreatorName: eventCreatorName)
+        eventItemsController.removeItemOnChildRemoved(eventId: currentEvent.id, itemListTableView: listItemTableView, listInfoLabel: listInfoLabel, eventCreatorName: eventCreatorName)
         eventItemsController.updateItemOnChildChanged(eventId: currentEvent.id, itemListTableView: listItemTableView)
         
         //view, nav, and menu styling and formatting
@@ -66,15 +77,7 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewWillAppear(_ animated: Bool) {
         
-        //ensure new items count is displayed whenever view is shown
-        let creatorID = currentEvent.creator
         
-        //iterate authorizedUsers, identify creator name to display
-        for user in currentEvent.authorizedUsers {
-            if user.userId == creatorID {
-                listInfoLabel.text = "Organized by \(user.userName)    |    \(eventItemsController.items.count) items suggested"
-            }
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -89,7 +92,7 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventItemsController.items.count
     }
-    
+  
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) ->
         UITableViewCell {
             let listItemCell = listItemTableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath) as! ListItemTableViewCell
@@ -233,8 +236,18 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
         })
         disagree.backgroundColor = UIColor.orange
         
-        //return array of leadingSwipe UIContextualActions
-        return UISwipeActionsConfiguration(actions: [disagree, delete])
+        //ensure user has privileged access before offering delete UIContextualAction
+        if (eventItemsController.verifyIfPrivilegedUser(userID: self.userController.user.id, event: currentEvent)) {
+            
+            //return array of leadingSwipe UIContextualActions, including delete ability
+            return UISwipeActionsConfiguration(actions: [disagree, delete])
+        
+        } else {
+            
+            //return array without delete ability
+            return UISwipeActionsConfiguration(actions: [disagree])
+        }
+
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -257,8 +270,19 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
         })
         concur.backgroundColor = colors.accentColor1
         
-        //return array of trailingSwipe UIContextualActions
-        return UISwipeActionsConfiguration(actions: [concur, edit])
+        
+        //ensure user has privileged access before offering edit UIContextualAction
+        if (eventItemsController.verifyIfPrivilegedUser(userID: self.userController.user.id, event: currentEvent)) {
+            
+            //return array of trailingSwipe UIContextualActions, including edit ability
+            return UISwipeActionsConfiguration(actions: [concur, edit])
+            
+        } else {
+            
+            //return array without edit ability
+            return UISwipeActionsConfiguration(actions: [concur])
+        }
+        
     }
 
     

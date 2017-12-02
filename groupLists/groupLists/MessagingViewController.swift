@@ -30,6 +30,11 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //create notification center to observe keyboard appear and disappear events
+        var notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
         messageTableView.delegate = self
         messageTableView.dataSource = self
         messageTextField.delegate = self
@@ -80,21 +85,30 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         messageTextField.endEditing(true)
     }
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        UIView.animate(withDuration: 0.5) {
-            self.textHeightConstraint.constant = 260
-            self.view.layoutIfNeeded()
-        }
+    func keyboardWillShow(notification: NSNotification) {
+        
+        //get notification information
+        let userInfo = notification.userInfo!
+        //get keyboard height from userInfo, cast as CGRect to extract coordinates
+        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).height
+        
+        //change userInputEnclosure's bottom to be constrained to top of keyboard and reload view
+        self.textHeightConstraint.constant = (keyboardHeight)
+        self.view.layoutIfNeeded()
+        
     }
     
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        UIView.animate(withDuration: 0.5) {
-            self.textHeightConstraint.constant = 50
-            self.view.layoutIfNeeded()
-        }
+    func keyboardWillHide(notification: NSNotification) {
+        
+        //get notification information
+        let userInfo = notification.userInfo!
+        //get keyboard height from userInfo, cast as CGRect to extract coordinates
+        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).height
+        
+        //change userInputEnclosure's bottom to be reconstrained to just above window's bottom
+        self.textHeightConstraint.constant = (50)
+        self.view.layoutIfNeeded()
     }
-    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let messageCell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! MessageCell

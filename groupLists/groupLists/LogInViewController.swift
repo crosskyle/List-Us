@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class LogInViewController: UIViewController {
+class LogInViewController: UIViewController, UITextFieldDelegate {
     
     var userController: UserController!
     var userEventsController: UserEventsController!
@@ -20,6 +20,9 @@ class LogInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        emailField.delegate = self
+        passwordField.delegate = self
         
         view.backgroundColor = colors.primaryColor1
         
@@ -55,6 +58,11 @@ class LogInViewController: UIViewController {
                 self.userController.initUser(logInViewController: self, userEventsController: self.userEventsController, userId: userId)
             }
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

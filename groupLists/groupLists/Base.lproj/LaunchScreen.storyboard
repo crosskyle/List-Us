@@ -7,11 +7,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="BradleyHand-Bold.ttf">
-            <string>BradleyHandITCTT-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -25,32 +20,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splashScreen" translatesAutoresizingMaskIntoConstraints="NO" id="i56-ac-8v9">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Listus Logo Box" translatesAutoresizingMaskIntoConstraints="NO" id="fVO-YL-h8y">
+                                <rect key="frame" x="54" y="248" width="266" height="171"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Group Lists" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Jz-0j-L9u">
-                                <rect key="frame" x="72" y="160.5" width="231" height="56.5"/>
-                                <fontDescription key="fontDescription" name="BradleyHandITCTT-Bold" family="Bradley Hand" pointSize="45"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="helping groups efficiently coordinate" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J68-4M-Yyf">
-                                <rect key="frame" x="17.5" y="241" width="340" height="26.5"/>
-                                <fontDescription key="fontDescription" name="BradleyHandITCTT-Bold" family="Bradley Hand" pointSize="21"/>
-                                <color key="textColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="2Jz-0j-L9u" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="5Qq-8y-q60"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="i56-ac-8v9" secondAttribute="bottom" id="7Za-oy-Kik"/>
-                            <constraint firstAttribute="trailing" secondItem="i56-ac-8v9" secondAttribute="trailing" id="GjX-fv-JED"/>
-                            <constraint firstItem="i56-ac-8v9" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="PfQ-US-xWg"/>
-                            <constraint firstItem="i56-ac-8v9" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="RoT-ED-6J3"/>
-                            <constraint firstItem="J68-4M-Yyf" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-79.5" id="V74-kF-Jxq"/>
-                            <constraint firstItem="J68-4M-Yyf" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="ZDX-m3-TV9"/>
-                            <constraint firstItem="2Jz-0j-L9u" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-145" id="ahI-IB-lWd"/>
+                            <constraint firstItem="fVO-YL-h8y" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="228" id="91r-EO-SAQ"/>
+                            <constraint firstItem="fVO-YL-h8y" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="54" id="goJ-MQ-5Xf"/>
+                            <constraint firstAttribute="trailing" secondItem="fVO-YL-h8y" secondAttribute="trailing" constant="55" id="l9J-WY-y84"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="fVO-YL-h8y" secondAttribute="bottom" constant="248" id="xP7-mf-WoA"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -60,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splashScreen" width="2832" height="4240"/>
+        <image name="Listus Logo Box" width="373" height="371"/>
     </resources>
 </document>

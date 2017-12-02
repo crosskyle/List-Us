@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class RegisterViewController: UIViewController {
+class RegisterViewController: UIViewController, UITextFieldDelegate {
     
     var userController : UserController!
     var userEventsController: UserEventsController!
@@ -22,6 +22,11 @@ class RegisterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        firstNameField.delegate = self
+        lastNameField.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
         
         view.backgroundColor = colors.primaryColor1
         
@@ -62,6 +67,11 @@ class RegisterViewController: UIViewController {
                 self.performSegue(withIdentifier: "showUser", sender: nil)
             }
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
     }
     
     

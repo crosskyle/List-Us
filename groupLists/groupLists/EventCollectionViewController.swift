@@ -129,19 +129,31 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         } else {
             cell.eventDateLabel.text = "This event occured on:\n\(dateFormatter.string(from: eventDate))"
         }
+        
         cell.eventDateLabel.lineBreakMode = .byWordWrapping
         cell.eventDateLabel.numberOfLines = 0
         cell.eventDateLabel.textColor = UIColor.white
-        cell.eventDateLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        cell.eventDateLabel.font = UIFont.boldSystemFont(ofSize: 14)
         
-        cell.eventOrganizerLabel.textColor = UIColor.white
-        cell.eventOrganizerLabel.font = UIFont.systemFont(ofSize: 12)
+        cell.eventOrganizerLabel.text = "|  Organized by \(self.userEventsController.getCreatorName(index: (indexPath.item)))  |"
+        cell.eventOrganizerLabel.textColor = colors.accentColor1
+        cell.eventOrganizerLabel.font = UIFont.systemFont(ofSize: 9)
+        
+        
+        //find self user in event's authorizedUser array, if user does not have permissions, disable edit features/button
+        for user in userEventsController.events[indexPath.item].authorizedUsers {
+            if user.userId == self.userController.user.id {
+                if user.permissions == true {
+                    cell.eventEditBtn.isHidden = false
+                } else {
+                    cell.eventEditBtn.isHidden = true
+                }
+            }
+        }
         
         cell.eventEditBtn.setImage(UIImage(named: "settings_gear_white")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
         cell.eventEditBtn.tintColor = colors.primaryColor2
         cell.eventEditBtn.tag = indexPath.item
-
-        //cell.eventEditBtn.addTarget(self, action: #selector(displayEditOptions), for: .touchUpInside)
         cell.eventEditBtn.addTarget(self, action: #selector(blurOptions), for: .touchUpInside)
         
         cell.layer.borderColor = colors.accentColor1.cgColor
@@ -167,19 +179,20 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             var yValue = sender.convert(sender.center, to: self.view)
             var superViewCGRect = sender.superview?.convert(sender.superview!.center, to: self.view)
             var superView = sender.superview?.convert(sender.superview!.bounds, to: self.view)
-            print(superView)
-            //print(yValue)
             
+            //enable layout via constraints only
             blurBackground.translatesAutoresizingMaskIntoConstraints = false
             editButton.translatesAutoresizingMaskIntoConstraints = false
             deleteButton.translatesAutoresizingMaskIntoConstraints = false
             addUsersButton.translatesAutoresizingMaskIntoConstraints = false
             
+            //set UI elements zero rect
             blurBackground.frame = CGRect.zero
             editButton.frame = CGRect.zero
             deleteButton.frame = CGRect.zero
             addUsersButton.frame = CGRect.zero
             
+            //set optiosn frame to superview's frame and add its subview buttons
             self.optionsFrame.frame = CGRect(x: superView!.minX, y: superView!.minY, width: superView!.width, height: superView!.height)
             self.optionsFrame.backgroundColor = colors.primaryColor2
             self.optionsFrame.alpha = 0.5
@@ -188,6 +201,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             optionsFrame.addSubview(addUsersButton)
             blurBackground.contentView.addSubview(optionsFrame)
             
+            //format edit button
             editButton.setTitleColor(colors.accentColor1, for: .normal)
             editButton.backgroundColor = colors.primaryColor1
             editButton.setTitle("Edit", for: .normal)
@@ -195,6 +209,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             editButton.alpha = 0.5
             editButton.addTarget(self, action: #selector(initiateEditEvent), for: .touchUpInside)
             
+            //format add/remove user button
             addUsersButton.setTitleColor(colors.accentColor1, for: .normal)
             addUsersButton.backgroundColor = colors.primaryColor1
             addUsersButton.setTitle("Add/remove users", for: .normal)
@@ -205,6 +220,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             addUsersButton.alpha = 0.5
             addUsersButton.addTarget(self, action: #selector(manipulateUsers(sender:)), for: .touchUpInside)
             
+            //format delete button
             deleteButton.setTitleColor(UIColor.red, for: .normal)
             deleteButton.backgroundColor = colors.primaryColor1
             deleteButton.setTitle("Delete", for: .normal)
@@ -214,6 +230,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
 
         }
 
+        //animatte in manipulate event buttons, fading buttons in and background out with blur effect
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             
             //build array of all views needed for dynamic button overlay
@@ -250,23 +267,22 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             self.addUsersButton.alpha = 1
             self.editButton.alpha = 1
             self.deleteButton.alpha = 1
+            
         }, completion: nil)
-        
-        
     }
     
+    //unblur background and remove buttons (which are in its subview/contentview)
     func unblurView() {
         UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
-            print("In unblur func")
             self.blurBackground.alpha = 0.0
 
             //DispatchQueue.main.async(execute: {
-                self.blurBackground.removeFromSuperview()
-                print("In unblur func - main thread removefromsuperview")
+            self.blurBackground.removeFromSuperview()
             //})
             
         }, completion: nil)
     }
+    
     
     func displayEditOptions(sender: UIButton) {
         self.editIdx = sender.tag
@@ -314,6 +330,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         
     }
     
+    //send required information to destination VCs
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "displayList" {
@@ -351,6 +368,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         }
     }
     
+    //convert a time interval object hours if <= 24 hours, or days if >= 24 hours, returning string of conversion results
     func convertTimeIntervalToDaysHoursMinutesSeconds(timeInterval: TimeInterval) -> String {
         
         let totalSeconds = Int(timeInterval)
@@ -379,7 +397,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         menuLauncher.showMenu()
     }
     
-    //authoritative func for defining behavior when menuLauncher's menuOption is selected
+    //execute desired outcome based on specific MenuOption selected in MenuLauncher
     func executeMenuOption(option: MenuOption) {
         print("executeMenuOption")
         if option.name == "Cancel" {
@@ -410,6 +428,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         navigationLauncher.showMenu()
     }
     
+    //execute desired outcome based on specific NavOption selected in NavigationLauncher
     func executeNavOption(option: NavOption) {
         
         if option.name == "Cancel" {
@@ -432,6 +451,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         }
     }
     
+    //function to notify user if they are unauthorized to perform the requested action
     func showAlert(msg: String) {
         // Initialize Alert Controller
         let alertController = UIAlertController(title: "Not Allowed", message: "You are not allowed to " + msg + " this event.", preferredStyle: .alert)
@@ -439,7 +459,6 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         // Initialize Actions
         let okAction = UIAlertAction(title: "Ok", style: .default) { (action) -> Void in
             
-            print("user acknowledges")
         }
         
         // Add Actions

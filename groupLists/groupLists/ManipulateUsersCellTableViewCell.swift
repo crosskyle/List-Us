@@ -8,6 +8,8 @@
 
 import UIKit
 
+//custom button class holds an AuthorizedUser object
+//allows correlating button to user instead of useing cell.tag
 class userButton: UIButton {
     
     var user: AuthorizedUser?
@@ -21,6 +23,7 @@ class userButton: UIButton {
     }
 }
 
+//modal UITableView cell displays a single authorizedUser, and grants button to remove user
 class ManipulateUsersCellTableViewCell: UITableViewCell {
 
     //cell which displays a remove button, a user name, and user privileges
@@ -47,6 +50,7 @@ class ManipulateUsersCellTableViewCell: UITableViewCell {
         contentView.addSubview(userName)
         contentView.addSubview(userPrivileges)
         
+        //array of cell views
         let cellViews = [
             "contentView": self.contentView,
             "userName": self.userName,
@@ -56,6 +60,7 @@ class ManipulateUsersCellTableViewCell: UITableViewCell {
         
         var allConstraints = [NSLayoutConstraint]()
         
+        //all constraints set via code
         let horizontalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "H:|-8-[removeBtn(==15)]-20-[userName][userPrivileges]-40-|", options: [], metrics: nil, views: cellViews)
         allConstraints += horizontalConstraints
         let nameVerticalConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:|[userName]|", options: [], metrics: nil, views: cellViews)

@@ -7,13 +7,13 @@ target 'groupLists' do
 
   # Pods for groupLists
 
-pod 'Firebase/Core'
-pod 'Firebase/Database'
-pod 'Firebase/Auth'
-pod 'Firebase/Storage'
-pod 'PINRemoteImage', '3.0.0-beta.13'
-
-pod 'GoogleToolboxForMac', '~> 2.1'
+    pod 'Firebase/Core'
+    pod 'Firebase/Database'
+    pod 'Firebase/Auth'
+    pod 'Firebase/Storage'
+    pod 'PINRemoteImage', '3.0.0-beta.13'
+    pod 'GoogleToolboxForMac', '~> 2.1'
+    pod 'SVProgressHUD'
 
 
   target 'groupListsTests' do

@@ -271,4 +271,16 @@ class UserEventsController {
         print("does not have privileges")
         return false
     }
+    
+    //get name of event creator
+    func getCreatorName(index: Int) -> String {
+        
+        for user in self.events[index].authorizedUsers {
+            if user.userId == self.events[index].creator {
+                return user.userName
+            }
+        }
+        
+        return "unknown"
+    }
 }

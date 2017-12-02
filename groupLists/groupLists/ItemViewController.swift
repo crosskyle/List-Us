@@ -9,8 +9,9 @@
 import UIKit
 import FirebaseStorage
 import Photos
+import SVProgressHUD
 
-class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemNameTextField: UITextField!
@@ -39,6 +40,9 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         super.viewDidLoad()
     
         storageRef = Storage.storage().reference()
+        
+        itemNameTextField.delegate = self
+        descriptionTextField.delegate = self
         
         view.backgroundColor = colors.primaryColor1
         
@@ -121,6 +125,7 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         dismiss(animated: true, completion: nil)
         submitNewItemBtn.isEnabled = false
+        SVProgressHUD.show()
         
         //Boilerplate code taken from Firebase documentation
         //Upload photos taken from library
@@ -166,6 +171,7 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         print("Upload Succeeded!")
         submitNewItemBtn.isEnabled = true
         imageURL = metadata.downloadURL()!.absoluteString
+        SVProgressHUD.dismiss()
     }
     
     override func didReceiveMemoryWarning() {
@@ -223,5 +229,10 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     func returnToList(){
         dismiss(animated: true) {}
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.endEditing(true)
+        return true
     }
 }

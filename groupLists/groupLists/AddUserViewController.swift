@@ -10,6 +10,7 @@ import Foundation
 import Firebase
 import UIKit
 
+//view controller to present modally, offers interface to manipulate event's authorizedUsers
 class AddUserViewController: UIViewController {
     var ref : DatabaseReference!
     
@@ -22,9 +23,11 @@ class AddUserViewController: UIViewController {
     var userEventsController = UserEventsController.init()
     var eventIdx = Int()
     
+    //cancel and dismiss add users interface
     @IBAction func cancelAdd(_ sender: Any) {
         dismiss(animated: true)
     }
+    
     
     @IBAction func addUser(_ sender: Any) {
         ref = Database.database().reference()
