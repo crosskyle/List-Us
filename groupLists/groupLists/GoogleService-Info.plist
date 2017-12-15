@@ -7,34 +7,34 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>475830939411-r6b4urek8rdlm5qkv9u1ifqjtvc08enu.apps.googleusercontent.com</string>
+	<string>452196743694-6t317an0jj3un9aev9kni0h6f6p5849q.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.475830939411-r6b4urek8rdlm5qkv9u1ifqjtvc08enu</string>
+	<string>com.googleusercontent.apps.452196743694-6t317an0jj3un9aev9kni0h6f6p5849q</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDxI3wzQBbtiU-0etdc-eT0ZiNIhHUji1w</string>
+	<string>AIzaSyBNCwyeCvD7ZnAgu0W4msG61C3d-SEYQIU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>475830939411</string>
+	<string>452196743694</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>capstone.groupLists</string>
+	<string>com.kylecross.listus</string>
 	<key>PROJECT_ID</key>
-	<string>grouplist-23248</string>
+	<string>listus-f63f8</string>
 	<key>STORAGE_BUCKET</key>
-	<string>grouplist-23248.appspot.com</string>
+	<string>listus-f63f8.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:475830939411:ios:070b2c1426d9fa54</string>
+	<string>1:452196743694:ios:d7659194db2d94c7</string>
 	<key>DATABASE_URL</key>
-	<string>https://grouplist-23248.firebaseio.com</string>
+	<string>https://listus-f63f8.firebaseio.com</string>
 </dict>
 </plist>

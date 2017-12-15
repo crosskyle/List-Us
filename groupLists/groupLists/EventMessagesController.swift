@@ -1,11 +1,3 @@
-//
-//  EventMessagesController.swift
-//  groupLists
-//
-//  Created by Kyle Cross on 10/19/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import Foundation
 import Firebase
 
@@ -43,7 +35,7 @@ class EventMessagesController {
         }
     }
     
-    func getMessages(userId: String, eventId: String, messageTableView: UITableView) {
+    func getMessages(userId: String, eventId: String, updateTable: @escaping () -> Void) {
         
         self.ref = Database.database().reference()
         
@@ -67,10 +59,7 @@ class EventMessagesController {
             
             self.messages.append(message)
             
-            //Reload table data
-            messageTableView.rowHeight = UITableViewAutomaticDimension
-            messageTableView.estimatedRowHeight = 140
-            messageTableView.reloadData()
+            updateTable()
         })
     }
 }

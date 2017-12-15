@@ -1,11 +1,3 @@
-//
-//  AddUserViewController.swift
-//  groupLists
-//
-//  Created by Valerie P Brown on 11/10/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import Foundation
 import Firebase
 import UIKit

@@ -1,11 +1,3 @@
-//
-//  ManipulateUsersController.swift
-//  groupLists
-//
-//  Created by bergerMacPro on 11/10/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import Foundation
 import Firebase
 import UIKit

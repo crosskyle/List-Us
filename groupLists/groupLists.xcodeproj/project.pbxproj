@@ -32,9 +32,11 @@
 		104AE9B20E636A38E94BCAEF /* Pods_groupListsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 803C7E5071D6FCEDF10A9839 /* Pods_groupListsUITests.framework */; };
 		240574E61F8D8092007EC0F0 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240574E51F8D8092007EC0F0 /* WelcomeViewController.swift */; };
 		240574E81F8D80F9007EC0F0 /* LogInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240574E71F8D80F9007EC0F0 /* LogInViewController.swift */; };
-		244290E11F8333A0001B0E23 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 244290E01F83339B001B0E23 /* GoogleService-Info.plist */; };
 		24631AF51F969EC2005068E7 /* UserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24631AF41F969EC2005068E7 /* UserController.swift */; };
 		24631AFF1F971235005068E7 /* FirebaseConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24631AFE1F971235005068E7 /* FirebaseConstants.swift */; };
+		247CCCB31FDDF13000C2E115 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 247CCCB21FDDF13000C2E115 /* GoogleService-Info.plist */; };
+		247CCCB41FDDF1BC00C2E115 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 247CCCB21FDDF13000C2E115 /* GoogleService-Info.plist */; };
+		247CCCB51FDDF1BD00C2E115 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 247CCCB21FDDF13000C2E115 /* GoogleService-Info.plist */; };
 		248D1E931FA006B000DF14A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 248D1E921FA006B000DF14A4 /* Assets.xcassets */; };
 		2494B60F1F994D7400794F76 /* UserEventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2494B60E1F994D7400794F76 /* UserEventsController.swift */; };
 		2494B6131F994DBB00794F76 /* EventItemsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2494B6121F994DBB00794F76 /* EventItemsController.swift */; };
@@ -96,9 +98,9 @@
 		0B59F06F522C19B2672E0BF4 /* Pods-groupListsUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-groupListsUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-groupListsUITests/Pods-groupListsUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		240574E51F8D8092007EC0F0 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		240574E71F8D80F9007EC0F0 /* LogInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInViewController.swift; sourceTree = "<group>"; };
-		244290E01F83339B001B0E23 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		24631AF41F969EC2005068E7 /* UserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserController.swift; sourceTree = "<group>"; };
 		24631AFE1F971235005068E7 /* FirebaseConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConstants.swift; sourceTree = "<group>"; };
+		247CCCB21FDDF13000C2E115 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		248D1E921FA006B000DF14A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2494B60E1F994D7400794F76 /* UserEventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserEventsController.swift; sourceTree = "<group>"; };
 		2494B6121F994DBB00794F76 /* EventItemsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemsController.swift; sourceTree = "<group>"; };
@@ -177,8 +179,8 @@
 				0798B6031F815660002185C5 /* AppDelegate.swift */,
 				248D1E921FA006B000DF14A4 /* Assets.xcassets */,
 				0798B60F1F815660002185C5 /* Info.plist */,
-				244290E01F83339B001B0E23 /* GoogleService-Info.plist */,
 				24631AFE1F971235005068E7 /* FirebaseConstants.swift */,
+				247CCCB21FDDF13000C2E115 /* GoogleService-Info.plist */,
 			);
 			path = groupLists;
 			sourceTree = "<group>";
@@ -366,6 +368,7 @@
 				TargetAttributes = {
 					0798B5FF1F815660002185C5 = {
 						CreatedOnToolsVersion = 8.2;
+						DevelopmentTeam = LEWCH996DR;
 						ProvisioningStyle = Automatic;
 					};
 					0798B6131F815660002185C5 = {
@@ -406,7 +409,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0798B65D1F816584002185C5 /* Main.storyboard in Resources */,
-				244290E11F8333A0001B0E23 /* GoogleService-Info.plist in Resources */,
+				247CCCB31FDDF13000C2E115 /* GoogleService-Info.plist in Resources */,
 				248D1E931FA006B000DF14A4 /* Assets.xcassets in Resources */,
 				0798B65C1F816584002185C5 /* LaunchScreen.storyboard in Resources */,
 			);
@@ -416,6 +419,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				247CCCB41FDDF1BC00C2E115 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +427,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				247CCCB51FDDF1BD00C2E115 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -782,11 +787,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LEWCH996DR;
 				INFOPLIST_FILE = groupLists/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = capstone.groupLists;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kylecross.listus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;
@@ -800,11 +805,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = LEWCH996DR;
 				INFOPLIST_FILE = groupLists/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = capstone.groupLists;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kylecross.listus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 3.0;

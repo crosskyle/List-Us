@@ -1,11 +1,3 @@
-//
-//  ManipulateUsersCellTableViewCell.swift
-//  groupLists
-//
-//  Created by bergerMacPro on 11/11/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import UIKit
 
 //custom button class holds an AuthorizedUser object

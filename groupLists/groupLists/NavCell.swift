@@ -1,11 +1,3 @@
-//
-//  NavCell.swift
-//  groupLists
-//
-//  Created by bergerMacPro on 10/25/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import Foundation
 import UIKit
 

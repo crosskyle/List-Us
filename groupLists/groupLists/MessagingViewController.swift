@@ -1,11 +1,3 @@
-//
-//  MessagingViewController.swift
-//  groupLists
-//
-//  Created by Kyle Cross on 11/4/17.
-//  Copyright © 2017 bergerMacPro. All rights reserved.
-//
-
 import UIKit
 import Firebase
 
@@ -26,6 +18,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var navBtn: UIButton!
     @IBOutlet weak var menuBtn: UIButton!
     @IBOutlet weak var listNameLabel: UILabel!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,13 +43,10 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         // Configure the UI
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector (tableViewTapped))
         messageTableView.addGestureRecognizer(tapGesture)
-        messageTableView.rowHeight = UITableViewAutomaticDimension
-        messageTableView.estimatedRowHeight = 140
+        messageTableView.separatorStyle = .none
         
         // Startup Firebase observer for getting messages
-        eventMessagesController.getMessages(userId: userController.user.id, eventId: currentEvent.id, messageTableView: messageTableView)
-        
-        messageTableView.separatorStyle = .none
+        eventMessagesController.getMessages(userId: userController.user.id, eventId: currentEvent.id, updateTable: updateTable)
         
         navBtn.showsTouchWhenHighlighted = true
         navBtn.tintColor = UIColor.darkGray
@@ -80,6 +70,11 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         eventMessagesController.createMessage(userController: userController, eventId: currentEvent.id, messageTextField: messageTextField, sendButton: sendButton, date: Date())
     }
     
+    func updateTable() {
+        self.messageTableView.rowHeight = UITableViewAutomaticDimension
+        self.messageTableView.estimatedRowHeight = 140
+        self.messageTableView.reloadData()
+    }
     
     func tableViewTapped() {
         messageTextField.endEditing(true)
@@ -95,7 +90,6 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         //change userInputEnclosure's bottom to be constrained to top of keyboard and reload view
         self.textHeightConstraint.constant = (keyboardHeight)
         self.view.layoutIfNeeded()
-        
     }
     
     func keyboardWillHide(notification: NSNotification) {

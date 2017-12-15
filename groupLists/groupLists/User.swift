@@ -1,5 +1,3 @@
-// user class to manage data associated with a user of the application/list
-
 import Foundation
 
 class User {
