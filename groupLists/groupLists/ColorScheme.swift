@@ -6,8 +6,6 @@ let colors = ColorScheme()
 
 class ColorScheme {
     
-    //static let colors = ColorScheme()
-    
     //dark blue - navy
     var primaryColor1 = UIColor.init(red: 31.0/255.0, green: 40.0/255.0, blue: 51.0/255.0, alpha: 1)
     

@@ -75,7 +75,6 @@ class MenuLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource, UICo
     }
     
     func closeMenu() {
-        print("In close menu")
         UIView.animate(withDuration: 0.5, animations: {
             self.blurView.alpha = 0
             
@@ -106,9 +105,7 @@ class MenuLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource, UICo
     }
     
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-        
         let cell = collectionView.cellForItem(at: indexPath) as! MenuCell
-        print(cell.isHighlighted)
         cell.backgroundColor = UIColor.lightGray
         cell.nameLabel.textColor = UIColor.white
         cell.iconImageView.tintColor = UIColor.white
@@ -116,7 +113,6 @@ class MenuLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource, UICo
     
     func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! MenuCell
-        print(cell.isHighlighted)
         cell.backgroundColor = UIColor.white
         cell.nameLabel.textColor = UIColor.black
         cell.iconImageView.tintColor = UIColor.black
@@ -133,7 +129,6 @@ class MenuLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource, UICo
         }) { (completed: Bool) in
             
             let option = self.menuOptions[indexPath.item]
-            print(option.name)
             
             //call executeMenuOption on corresponding base VC - only 1 is not nil
             self.baseMessagingVC?.executeMenuOption(option: option)

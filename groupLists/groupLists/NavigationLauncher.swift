@@ -17,7 +17,6 @@ class NavigationLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource
     var baseItemListVC: ItemListViewController?
     var baseEventCollectionVC: EventCollectionViewController?
     var baseEventVC: EventViewController?
-    var baseAddUserVC: AddUserViewController?
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -77,7 +76,6 @@ class NavigationLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource
     }
     
     func closeMenu() {
-        print("In close menu")
         UIView.animate(withDuration: 0.5, animations: {
             self.blurView.alpha = 0
             
@@ -113,14 +111,12 @@ class NavigationLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource
         }) { (completed: Bool) in
             
             let option = self.navOptions[indexPath.item]
-            print(option.name)
             
             //call executeMenuOption on corresponding base VC - only 1 is not nil
             self.baseMessagingVC?.executeNavOption(option: option)
             self.baseItemListVC?.executeNavOption(option: option)
             self.baseEventCollectionVC?.executeNavOption(option: option)
             self.baseEventVC?.executeNavOption(option: option)
-            self.baseAddUserVC?.executeNavOption(option: option)
         }
     }
 }

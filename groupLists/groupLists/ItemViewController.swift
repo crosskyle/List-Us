@@ -160,7 +160,6 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     }
     
     func uploadSuccess(_ metadata: StorageMetadata, storagePath: String) {
-        print("Upload Succeeded!")
         submitNewItemBtn.isEnabled = true
         imageURL = metadata.downloadURL()!.absoluteString
         SVProgressHUD.dismiss()
@@ -177,22 +176,21 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     func verifyValidAddition(){
         
         //if any of the required fields are missing, determine which one and notify user
-        if (itemNameTextField.text == "" || descriptionTextField.text == "") {
+        
+        if itemNameTextField.text == "" {
+            let alert = UIAlertController(title: "", message: "A name must be provided before adding item to list", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
+            self.present(alert, animated: true, completion: nil)
+        }
             
-            if itemNameTextField.text == "" {
-                let alert = UIAlertController(title: "", message: "A name must be provided before adding item to list", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
-                self.present(alert, animated: true, completion: nil)
-            }
-            
-            if descriptionTextField.text == "" {
-                let alert = UIAlertController(title: "", message: "A valid description must be provided before adding item to list", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
-                self.present(alert, animated: true, completion: nil)
-            }
+        else if descriptionTextField.text == "" {
+            let alert = UIAlertController(title: "", message: "A valid description must be provided before adding item to list", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
+            self.present(alert, animated: true, completion: nil)
+        }
             
         //otherwise proceed with create new item/edit existing item
-        } else {
+        else {
             
             //if editIdx not nil, user requsted edit to existing item
             if let updateIdx = editIdx {

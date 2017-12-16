@@ -44,7 +44,6 @@
 		2494B7981F8ECBDF005C5B92 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2494B7971F8ECBDF005C5B92 /* RegisterViewController.swift */; };
 		24C40E581FAE440B00F8F06E /* MessagingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C40E571FAE440B00F8F06E /* MessagingViewController.swift */; };
 		24C40E5D1FAE4D2A00F8F06E /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24C40E5C1FAE4D2A00F8F06E /* MessageCell.swift */; };
-		3B974FEF1FB610F2004AB60C /* AddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B974FEE1FB610F2004AB60C /* AddUserViewController.swift */; };
 		45BAB2DF846E78712A5A032C /* Pods_groupLists.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8676892577ECDED09EE44309 /* Pods_groupLists.framework */; };
 		76A1CAB3E7FCCC75D3E94A5B /* Pods_groupListsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A259273EDA45D79F281DDFE3 /* Pods_groupListsTests.framework */; };
 /* End PBXBuildFile section */
@@ -108,7 +107,6 @@
 		2494B7971F8ECBDF005C5B92 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		24C40E571FAE440B00F8F06E /* MessagingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingViewController.swift; sourceTree = "<group>"; };
 		24C40E5C1FAE4D2A00F8F06E /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		3B974FEE1FB610F2004AB60C /* AddUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserViewController.swift; sourceTree = "<group>"; };
 		803C7E5071D6FCEDF10A9839 /* Pods_groupListsUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_groupListsUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8676892577ECDED09EE44309 /* Pods_groupLists.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_groupLists.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B833A07A08CABF239368860 /* Pods-groupListsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-groupListsTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-groupListsTests/Pods-groupListsTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -236,7 +234,6 @@
 				2494B6161F9956CD00794F76 /* Authentication */,
 				071CFF981F8C415600080C81 /* ItemViewController.swift */,
 				071CFF961F8BFFA500080C81 /* ItemListViewController.swift */,
-				3B974FEE1FB610F2004AB60C /* AddUserViewController.swift */,
 				07E0EA261FA64F970044673F /* EventViewController.swift */,
 				0790E0B81FB6990B00DF32D1 /* ManipulateUsersController.swift */,
 				0788FEE91F9120E200D71A50 /* EventCollectionViewController.swift */,
@@ -605,7 +602,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2494B60F1F994D7400794F76 /* UserEventsController.swift in Sources */,
-				3B974FEF1FB610F2004AB60C /* AddUserViewController.swift in Sources */,
 				0798B63C1F816196002185C5 /* ColorScheme.swift in Sources */,
 				0788FEEC1F91216200D71A50 /* EventCollectionViewCell.swift in Sources */,
 				24C40E581FAE440B00F8F06E /* MessagingViewController.swift in Sources */,
