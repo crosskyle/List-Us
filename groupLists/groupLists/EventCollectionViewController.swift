@@ -351,12 +351,6 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             destinationVC.userEventsController = self.userEventsController
             destinationVC.editIdx = self.editIdx
             
-        } else if segue.identifier == "addUser" {
-            let destinationVC = segue.destination as! AddUserViewController
-            destinationVC.userEventsController = self.userEventsController
-            
-            destinationVC.eventIdx = self.editIdx!
-            
         }
     }
     
@@ -391,7 +385,6 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     //execute desired outcome based on specific MenuOption selected in MenuLauncher
     func executeMenuOption(option: MenuOption) {
-        print("executeMenuOption")
         if option.name == "Cancel" {
             //cancel selected, do nothing
         

@@ -128,7 +128,6 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
             }
             
             //append + to voteCount display, if positive
-            print(self.eventItemsController.items[indexPath.row].voteCount)
             if self.eventItemsController.items[indexPath.row].voteCount > 0 {
                 listItemCell.voteCountLabel.text = "+\(self.eventItemsController.items[indexPath.row].voteCount)"
             } else {
@@ -222,7 +221,6 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
         let disagree = UIContextualAction(style: .normal, title: "Disagree", handler: { (contextualAction, sourceView, completionHandler) in
             let cell = tableView.cellForRow(at: indexPath)
             cell?.tag = indexPath.row
-            print("Clicking on disagree")
             self.eventItemsController.downvoteItem(eventId: self.currentEvent.id, item: self.eventItemsController.items[indexPath.row], user: self.userController.user)
             self.listItemTableView.reloadData()
         })
@@ -256,7 +254,6 @@ class ItemListViewController: UIViewController, UITableViewDelegate, UITableView
         let concur = UIContextualAction(style: .normal, title: "Concur", handler: { (contextualAction, sourceView, completionHandler) in
             let cell = tableView.cellForRow(at: indexPath)
             cell?.tag = indexPath.row
-            print("Clicking on concur")
             self.eventItemsController.upvoteItem(eventId: self.currentEvent.id, item: self.eventItemsController.items[indexPath.row], user: self.userController.user)
             self.listItemTableView.reloadData()
         })

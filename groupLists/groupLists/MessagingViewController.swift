@@ -24,7 +24,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         
         //create notification center to observe keyboard appear and disappear events
-        var notificationCenter = NotificationCenter.default
+        let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         

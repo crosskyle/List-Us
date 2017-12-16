@@ -93,18 +93,21 @@ class EventViewController: UIViewController, UITextFieldDelegate {
     func verifyValidEventAddition() {
         
         //if any of the required fields are missing, determine which one and notify user
-        if (eventNameTextField.text == "" || eventDescTextField.text == "") {
-            
-            if eventNameTextField.text == "" {
-                print("A name must be provided before adding this event")
-            }
-            
-            if eventDescTextField.text == "" {
-                print("A valid description must be provided before adding this event")
-            }
+        
+        if eventNameTextField.text == "" {
+            let alert = UIAlertController(title: "", message: "A name must be provided before adding this event", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
+        else if eventDescTextField.text == "" {
+            let alert = UIAlertController(title: "", message: "A description must be provided before adding this event", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .`default`))
+            self.present(alert, animated: true, completion: nil)
+        }
             
         //otherwise proceed with create new item/edit existing event
-        } else {
+        else {
             
             //if editIdx not nil, user requsted edit to existing event
             if let updateIdx = editIdx {
@@ -173,7 +176,6 @@ class EventViewController: UIViewController, UITextFieldDelegate {
         // Initialize Actions
         let okAction = UIAlertAction(title: "Ok", style: .default) { (action) -> Void in
             self.dismiss(animated: true) {}
-            print("user acknowledges")
         }
         
         // Add Actions

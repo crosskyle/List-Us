@@ -136,7 +136,6 @@ class UserEventsController {
             return true
             
         } else {
-            
             print("Invalid event index provided")
             return false
         }
@@ -170,7 +169,6 @@ class UserEventsController {
             }
             
         } else {
-            
             print("Invalid event index provided")
             return false
             
@@ -250,18 +248,15 @@ class UserEventsController {
         let e = events[index]
         
         if e.creator == user.user.id {
-            print("has privileges")
             return true
         }
         
         for u in e.authorizedUsers {
             if u.userId == user.user.id && u.permissions == true {
-                print("has privileges")
                 return true
             }
         }
-        
-        print("does not have privileges")
+
         return false
     }
     
