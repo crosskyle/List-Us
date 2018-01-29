@@ -3,9 +3,9 @@ import Firebase
 
 class MessagingViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
-    var userController: UserController!
+    var userController: UserController?
+    var event: Event?
     var eventMessagesController = EventMessagesController()
-    var currentEvent: Event!
     
     let navigationLauncher = NavigationLauncher()
     let menuLauncher = MenuLauncher()
@@ -25,12 +25,13 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         
         //create notification center to observe keyboard appear and disappear events
         let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         messageTableView.delegate = self
         messageTableView.dataSource = self
         messageTextField.delegate = self
+        
         messageTableView.backgroundColor = colors.primaryColor1
         textFieldView.backgroundColor = colors.primaryColor1
         
@@ -40,13 +41,14 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         sendButton.setImage(tintedImage, for: .normal)
         sendButton.tintColor = colors.accentColor1
         
-        // Configure the UI
+        // Add tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector (tableViewTapped))
         messageTableView.addGestureRecognizer(tapGesture)
-        messageTableView.separatorStyle = .none
         
         // Startup Firebase observer for getting messages
-        eventMessagesController.getMessages(userId: userController.user.id, eventId: currentEvent.id, updateTable: updateTable)
+        if let event = event, let userController = userController {
+            eventMessagesController.getMessages(userId: userController.user.id, eventId: event.id, updateTable: updateTable)
+        }
         
         navBtn.showsTouchWhenHighlighted = true
         navBtn.tintColor = UIColor.darkGray
@@ -56,7 +58,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         menuBtn.tintColor = UIColor.darkGray
         menuBtn.addTarget(self, action: #selector(displayMenu), for: .touchUpInside)
         
-        listNameLabel.text = currentEvent.name
+        listNameLabel.text = event?.name
         
         //add contextual options to bottom fly-in menu bar
         menuLauncher.menuOptions.insert(MenuOption(name: "Back", iconName: "back"), at: 0)
@@ -67,7 +69,13 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
         messageTextField.isEnabled = false
         sendButton.isEnabled = false
         
-        eventMessagesController.createMessage(userController: userController, eventId: currentEvent.id, messageTextField: messageTextField, sendButton: sendButton, date: Date())
+        guard let event = event, let userController = userController else { return }
+        
+        eventMessagesController.createMessage(userController: userController, eventId: event.id, date: Date(), text: messageTextField?.text ?? "", completion: { [weak self] () in
+            self?.messageTextField.isEnabled = true
+            self?.messageTextField.text = ""
+            self?.sendButton.isEnabled = true
+        })
     }
     
     func updateTable() {
@@ -93,44 +101,41 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        
-        //get notification information
-        let userInfo = notification.userInfo!
-        //get keyboard height from userInfo, cast as CGRect to extract coordinates
-        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).height
-        
         //change userInputEnclosure's bottom to be reconstrained to just above window's bottom
         self.textHeightConstraint.constant = (50)
         self.view.layoutIfNeeded()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let messageCell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath) as! MessageCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "messageCell", for: indexPath)
         
-        let message = eventMessagesController.messages[indexPath.row]
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        dateFormatter.locale = Locale(identifier: "en_US")
-        
-        messageCell.messageBody.text = message.messageBody
-        messageCell.senderName.text = message.senderName
-        messageCell.messageTime.text = dateFormatter.string(from: message.timestamp)
-        
-        messageCell.backgroundColor = colors.primaryColor1
-        messageCell.senderName.textColor = colors.primaryColor2
-        messageCell.messageTime.textColor = colors.primaryColor2
-        messageCell.messageBody.textColor = colors.primaryColor1
-        
-        if message.senderID == userController.user.id {
-            messageCell.messageBodyView.backgroundColor = colors.accentColor1
+        if let messageCell = cell as? MessageCell {
+            let message = eventMessagesController.messages[indexPath.row]
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .long
+            dateFormatter.timeStyle = .none
+            dateFormatter.locale = Locale(identifier: "en_US")
+            
+            messageCell.messageBody.text = message.messageBody
+            messageCell.senderName.text = message.senderName
+            messageCell.messageTime.text = dateFormatter.string(from: message.timestamp)
+            
+            messageCell.backgroundColor = colors.primaryColor1
+            messageCell.senderName.textColor = colors.primaryColor2
+            messageCell.messageTime.textColor = colors.primaryColor2
+            messageCell.messageBody.textColor = colors.primaryColor1
+            
+            if message.senderID == userController?.user.id {
+                messageCell.messageBodyView.backgroundColor = colors.accentColor1
+            }
+            else {
+                messageCell.messageBodyView.backgroundColor = colors.primaryColor2
+            }
+            
+            return messageCell
         }
-        else {
-            messageCell.messageBodyView.backgroundColor = colors.primaryColor2
-        }
-        
-        return messageCell
+       return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -143,10 +148,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func executeMenuOption(option: MenuOption) {
-        
-        if option.name == "Cancel" {
-            //cancel selected, do nothing
-        } else if option.name == "Back" {
+        if option.name == "Back" {
             //go to events view
             dismiss(animated: true)
         }
@@ -158,11 +160,7 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func executeNavOption(option: NavOption) {
-        
-        if option.name == "Cancel" {
-            //cancel selected, do nothing
-        }
-        else if option.name == "My Events" {
+        if option.name == "My Events" {
             //go to events view
             dismiss(animated: true)
         } else if option.name == "Logout" {
@@ -176,9 +174,5 @@ class MessagingViewController: UIViewController, UITableViewDelegate, UITableVie
                 print("A logout error occured")
             }
         }
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }

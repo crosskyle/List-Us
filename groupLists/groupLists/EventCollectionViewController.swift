@@ -336,7 +336,7 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             
             let messagingVC = tabBarViewControllers.viewControllers![1] as! MessagingViewController
             messagingVC.userController = self.userController
-            messagingVC.currentEvent = self.userEventsController.events[selectedIndexPath.item]
+            messagingVC.event = self.userEventsController.events[selectedIndexPath.item]
         
         } else if segue.identifier == "addEvent" {
             

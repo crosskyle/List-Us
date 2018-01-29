@@ -5,7 +5,7 @@ class EventMessagesController {
     var messages: [Message] = []
     var ref : DatabaseReference!
     
-    func createMessage(userController: UserController, eventId: String, messageTextField: UITextField, sendButton: UIButton, date: Date) {
+    func createMessage(userController: UserController, eventId: String, date: Date, text: String, completion: @escaping () -> Void) {
         
         //format date as string for firebase
         let formatter = DateFormatter()
@@ -21,17 +21,15 @@ class EventMessagesController {
         let messageDict = [DB.senderId: userController.user.id,
                            DB.senderName: senderName,
                            DB.time: dateString,
-                           DB.messageBody: messageTextField.text!]
+                           DB.messageBody: text]
         
         messageRef.setValue(messageDict) { (error, reference) in
             
-            if error != nil {
-                print(error!)
+            if let error = error {
+                print(error)
             }
             
-            messageTextField.isEnabled = true
-            messageTextField.text = ""
-            sendButton.isEnabled = true
+            completion()
         }
     }
     
