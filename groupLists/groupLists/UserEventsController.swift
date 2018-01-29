@@ -44,12 +44,10 @@ class UserEventsController {
     func addUserToEvent(eventID: String, eventIdx: Int, email: String, permissions: Bool, addUserVC: ManipulateUsersController) {
         //query for user's key based on user's email
         ref.child(DB.users).queryOrdered(byChild:  "email").queryStarting(atValue: email).queryEnding(atValue: email).observeSingleEvent(of: .value, with: { (snapshot) in
-            let user = snapshot.value as? NSDictionary
-            
-            if user != nil {
+            if let user = snapshot.value as? NSDictionary {
                 // get user's id and name
-                let userID = user!.allKeys[0] as? String
-                let userDict = user![userID!] as? NSDictionary ?? [:]
+                let userID = user.allKeys[0] as? String
+                let userDict = user[userID!] as? NSDictionary ?? [:]
                 let userName = (userDict[DB.firstName]! as? String ?? "") + " " + (userDict[DB.lastName]! as? String ?? "")
                 
                 //add user to event's authorizedUsers
@@ -84,14 +82,14 @@ class UserEventsController {
         //ensure valid index
         if (eventIdx < self.events.count) {
             
-            self.ref = Database.database().reference()
+            ref = Database.database().reference()
             //remove userID from event's authorizedUsers array
-            self.ref.child(DB.events).child(self.events[eventIdx].id).child(DB.authorizedUsers).child(user.userId).removeValue()
+            ref.child(DB.events).child(self.events[eventIdx].id).child(DB.authorizedUsers).child(user.userId).removeValue()
             //remove event from user's events array
-            self.ref.child(DB.users).child(user.userId).child(DB.events).child(self.events[eventIdx].id).removeValue()
+            ref.child(DB.users).child(user.userId).child(DB.events).child(self.events[eventIdx].id).removeValue()
             
             //remove user from local authorizedUsers array
-            self.events[eventIdx].authorizedUsers = self.events[eventIdx].authorizedUsers.filter( {$0.userId != user.userId} )
+            events[eventIdx].authorizedUsers = self.events[eventIdx].authorizedUsers.filter( {$0.userId != user.userId} )
             //update current user view and adjust view's height accordingly
             addUserVC.currentUsersTableView.reloadData()
             addUserVC.updateViewConstraints()
@@ -179,11 +177,9 @@ class UserEventsController {
     
     
     //get user's events from FireBase
-    func getDBEvents(userId: String, eventCollectionView: UICollectionView) {
+    func getDBEvents(userId: String, completion: @escaping () -> Void) {
         ref = Database.database().reference()
         var events_list: [String] = []
-        
-        
         
         ref.child(DB.users).child(userId).child(DB.events).queryOrderedByKey().observeSingleEvent(of: .value, with: { (snapshot) in
             let user_events = snapshot.value as? NSDictionary
@@ -232,14 +228,16 @@ class UserEventsController {
                             self.ref.child(DB.users).child(userId).child(DB.events).child(key).removeValue()
                         }
                         
-                        eventCollectionView.reloadData()
+                        completion()
                     }) { (error) in
                         print(error.localizedDescription)
+                        completion()
                     }
                 }
             }
         }) { (error) in
             print(error.localizedDescription)
+            completion()
         }
     }
     

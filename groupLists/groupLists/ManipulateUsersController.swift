@@ -35,7 +35,7 @@ class ManipulateUsersController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLoad()
         
         //create notification center to observe keyboard appear and disappear events
-        var notificationCenter = NotificationCenter.default
+        let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         notificationCenter.addObserver(self, selector: #selector(ManipulateUsersController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -100,10 +100,6 @@ class ManipulateUsersController: UIViewController, UITableViewDataSource, UITabl
         //dynamically size tableView to number of authorizedUsers * per row height
         tableViewHeight = rowHeight * CGFloat(userEventsController.events[currentEventIdx].authorizedUsers.count) //3 * currentUsersTableView.rowHeight
         
-        
-        //customize layout using coded layouts, and above calculated table view height metric
-        let metrics = ["tableViewHeight": tableViewHeight]
-        
         let userInputHorzConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|[userInputTextField]|", options: [], metrics: nil, views: views)
         self.allContstraints += userInputHorzConstraint
         let userOptionsHorzConstraint = NSLayoutConstraint.constraints(withVisualFormat: "H:|[privilegesLabel]-3-[privilegesToggle]-3-[authorizeUserBtn(>=50)]-3-[doneAddingBtn(==authorizeUserBtn)]|", options: [], metrics: nil, views: views)
@@ -163,11 +159,6 @@ class ManipulateUsersController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        
-        //get notification information
-        let userInfo = notification.userInfo!
-        //get keyboard height from userInfo, cast as CGRect to extract coordinates
-        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! CGRect).height
         
         //change userInputEnclosure's bottom to be reconstrained to just above window's bottom
         userInputEnclosureBottomConstraint?.constant = -(5)

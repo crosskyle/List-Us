@@ -8,10 +8,10 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     var userController : UserController?
     var userEventsController: UserEventsController?
     let navigationLauncher = NavigationLauncher()
-    let menuLauncher = MenuLauncher()
-    let editLauncher = MenuLauncher()
     var editIdx: Int?
     var deleteIdx: Int?
+    let menuLauncher = MenuLauncher()
+    let editLauncher = MenuLauncher()
     
     @IBOutlet weak var eventCollectionView: UICollectionView!
     
@@ -42,7 +42,9 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         
         //get all events for this user
         if let userEventsController = userEventsController, let userController = userController {
-            userEventsController.getDBEvents(userId: userController.user.id, eventCollectionView: eventCollectionView)
+            userEventsController.getDBEvents(userId: userController.user.id) {[weak self] () in
+                self?.eventCollectionView.reloadData()
+            }
         }
         
         //populate menu options available from this VC

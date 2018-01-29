@@ -7,15 +7,12 @@ class ItemViewController: UIViewController, UIImagePickerControllerDelegate, UIN
 
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemNameTextField: UITextField!
-    
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var descriptionTextField: UITextField!
-    
     @IBOutlet weak var quantityLabel: UILabel!
     @IBOutlet weak var quantityStepperLabel: UILabel!
     @IBOutlet weak var quantityStepper: UIStepper!
     @IBOutlet weak var uploadPhotoBtn: UIButton!
-    
     @IBOutlet weak var backBtn: UIButton!
     @IBOutlet weak var submitNewItemBtn: UIButton!
     
