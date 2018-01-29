@@ -60,8 +60,6 @@ class NavigationLauncher: UICollectionViewFlowLayout, UICollectionViewDataSource
             fullWindow.addSubview(navCollectionView)
             
             let height: CGFloat = 350
-            let y = fullWindow.frame.height - height
-            let x = fullWindow.frame.width - 50
             //navCollectionView.frame = CGRect(x: 0, y: fullWindow.frame.height, width: fullWindow.frame.width, height: height)
             navCollectionView.frame = CGRect(x: -fullWindow.frame.width, y: 18, width: 200, height: fullWindow.frame.height - 18)
             blurView.frame = fullWindow.frame

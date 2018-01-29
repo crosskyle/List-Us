@@ -5,8 +5,8 @@ private let reuseIdentifier = "eventCell"
 
 class EventCollectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    var userController : UserController!
-    var userEventsController: UserEventsController!
+    var userController : UserController?
+    var userEventsController: UserEventsController?
     let navigationLauncher = NavigationLauncher()
     let menuLauncher = MenuLauncher()
     let editLauncher = MenuLauncher()
@@ -27,8 +27,8 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.eventCollectionView.delegate = self
-        self.eventCollectionView.dataSource = self
+        eventCollectionView.delegate = self
+        eventCollectionView.dataSource = self
 
         navBtn.showsTouchWhenHighlighted = true
         navBtn.tintColor = UIColor.darkGray
@@ -41,7 +41,9 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         menuBtn.addTarget(self, action: #selector(displayMenu), for: .touchUpInside)
         
         //get all events for this user
-        userEventsController.getDBEvents(userId: userController.user.id, eventCollectionView: self.eventCollectionView)
+        if let userEventsController = userEventsController, let userController = userController {
+            userEventsController.getDBEvents(userId: userController.user.id, eventCollectionView: eventCollectionView)
+        }
         
         //populate menu options available from this VC
         menuLauncher.menuOptions.insert(MenuOption(name: "Add Event", iconName: "add"), at: 0)
@@ -57,99 +59,89 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
         self.eventCollectionView.reloadData()
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-
+    
     // MARK: UICollectionViewDataSource
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return userEventsController.events.count
+        if let userEventsController = userEventsController {
+            return userEventsController.events.count
+        }
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         //cast cell as custom EventCollectionViewCell
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "eventCell", for: indexPath) as! EventCollectionViewCell
-        
-        //set cell background color
-        if (indexPath.item % 2 == 0) {
-            cell.backgroundColor = colors.primaryColor1
-        } else {
-            cell.backgroundColor = colors.primaryColor1
-        }
-        
-        //populate custom cell with event information
-        cell.eventNameLabel.text = userEventsController.events[indexPath.item].name
-        cell.eventNameLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        cell.eventNameLabel.textColor = UIColor.white
-        
-        let eventDate = userEventsController.events[indexPath.item].date
-        let todayDate = Date()
-        
-        //format event and current date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        dateFormatter.locale = Locale(identifier: "en_US")
-        
-        //calculate and format date interval between two dates, if date is still in future
-        //verify the event is  in the future, then calculate, and display, countdown
-        if (todayDate < eventDate) {
-            let dateUntilEvent = DateInterval.init(start: todayDate, end: eventDate)
-        }
-        
-        let dateIntervalFormatter = DateIntervalFormatter()
-        dateIntervalFormatter.dateStyle = .none
-        dateIntervalFormatter.timeStyle = .short
-        dateIntervalFormatter.locale = Locale(identifier: "en_US")
-        
-        //verify the event is  in the future, then calculate, and display, countdown
-        if (todayDate < eventDate) {
-            let countdownTimeInterval = eventDate.timeIntervalSince(todayDate)
-            cell.eventDateLabel.text = "\(dateFormatter.string(from: eventDate))\nin \(convertTimeIntervalToDaysHoursMinutesSeconds(timeInterval: countdownTimeInterval))"
-        //otherwise notify of event expiration
-        } else {
-            cell.eventDateLabel.text = "This event occured on:\n\(dateFormatter.string(from: eventDate))"
-        }
-        
-        cell.eventDateLabel.lineBreakMode = .byWordWrapping
-        cell.eventDateLabel.numberOfLines = 0
-        cell.eventDateLabel.textColor = UIColor.white
-        cell.eventDateLabel.font = UIFont.boldSystemFont(ofSize: 14)
-        
-        cell.eventOrganizerLabel.text = "|  Organized by \(self.userEventsController.getCreatorName(index: (indexPath.item)))  |"
-        cell.eventOrganizerLabel.textColor = colors.accentColor1
-        cell.eventOrganizerLabel.font = UIFont.systemFont(ofSize: 9)
-        
-        
-        //find self user in event's authorizedUser array, if user does not have permissions, disable edit features/button
-        for user in userEventsController.events[indexPath.item].authorizedUsers {
-            if user.userId == self.userController.user.id {
-                if user.permissions == true {
-                    cell.eventEditBtn.isHidden = false
-                } else {
-                    cell.eventEditBtn.isHidden = true
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "eventCell", for: indexPath)
+        if let eventCell = cell as? EventCollectionViewCell {
+            guard let userEventsController = userEventsController, let userController = userController else {return cell}
+            
+            //set cell background color
+            if (indexPath.item % 2 == 0) {
+                eventCell.backgroundColor = colors.primaryColor1
+            } else {
+                eventCell.backgroundColor = colors.primaryColor1
+            }
+            
+            //populate custom cell with event information
+            eventCell.eventNameLabel.text = userEventsController.events[indexPath.item].name
+            eventCell.eventNameLabel.font = UIFont.boldSystemFont(ofSize: 20)
+            eventCell.eventNameLabel.textColor = UIColor.white
+            
+            let eventDate = userEventsController.events[indexPath.item].date
+            let todayDate = Date()
+            
+            //format event and current date
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .long
+            dateFormatter.timeStyle = .none
+            dateFormatter.locale = Locale(identifier: "en_US")
+            
+            //calculate and format date interval between two dates, if date is still in future
+            //verify the event is  in the future, then calculate, and display, countdown
+            if (todayDate < eventDate) {
+                let countdownTimeInterval = eventDate.timeIntervalSince(todayDate)
+                eventCell.eventDateLabel.text = "\(dateFormatter.string(from: eventDate))\nin \(convertTimeIntervalToDaysHoursMinutesSeconds(timeInterval: countdownTimeInterval))"
+                //otherwise notify of event expiration
+            } else {
+                eventCell.eventDateLabel.text = "This event occured on:\n\(dateFormatter.string(from: eventDate))"
+            }
+            
+            eventCell.eventDateLabel.lineBreakMode = .byWordWrapping
+            eventCell.eventDateLabel.numberOfLines = 0
+            eventCell.eventDateLabel.textColor = UIColor.white
+            eventCell.eventDateLabel.font = UIFont.boldSystemFont(ofSize: 14)
+            
+            eventCell.eventOrganizerLabel.text = "|  Organized by \(userEventsController.getCreatorName(index: (indexPath.item)))  |"
+            eventCell.eventOrganizerLabel.textColor = colors.accentColor1
+            eventCell.eventOrganizerLabel.font = UIFont.systemFont(ofSize: 9)
+            
+            //find self user in event's authorizedUser array, if user does not have permissions, disable edit features/button
+            for user in userEventsController.events[indexPath.item].authorizedUsers {
+                if user.userId == userController.user.id {
+                    if user.permissions == true {
+                        eventCell.eventEditBtn.isHidden = false
+                    } else {
+                        eventCell.eventEditBtn.isHidden = true
+                    }
                 }
             }
+            
+            eventCell.eventEditBtn.setImage(UIImage(named: "settings_gear_white")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
+            eventCell.eventEditBtn.tintColor = colors.primaryColor2
+            eventCell.eventEditBtn.tag = indexPath.item
+            eventCell.eventEditBtn.addTarget(self, action: #selector(blurOptions), for: .touchUpInside)
+            
+            eventCell.layer.borderColor = colors.accentColor1.cgColor
+            eventCell.layer.borderWidth = 1
+            
+            return eventCell
         }
-        
-        cell.eventEditBtn.setImage(UIImage(named: "settings_gear_white")?.withRenderingMode(UIImageRenderingMode.alwaysTemplate), for: .normal)
-        cell.eventEditBtn.tintColor = colors.primaryColor2
-        cell.eventEditBtn.tag = indexPath.item
-        cell.eventEditBtn.addTarget(self, action: #selector(blurOptions), for: .touchUpInside)
-        
-        cell.layer.borderColor = colors.accentColor1.cgColor
-        cell.layer.borderWidth = 1
         
         return cell
     }
@@ -159,68 +151,62 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     }
     
     func blurOptions (sender: UIButton) {
-        self.editIdx = sender.tag
-        self.deleteIdx = sender.tag
+        editIdx = sender.tag
+        deleteIdx = sender.tag
         
         blurBackground.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(unblurView)))
         blurBackground.alpha = 0.4
         
-        if let fullWindow = UIApplication.shared.keyWindow {
-            
-            //get Y position of setting button pressed
-            var yValue = sender.convert(sender.center, to: self.view)
-            var superViewCGRect = sender.superview?.convert(sender.superview!.center, to: self.view)
-            var superView = sender.superview?.convert(sender.superview!.bounds, to: self.view)
-            
-            //enable layout via constraints only
-            blurBackground.translatesAutoresizingMaskIntoConstraints = false
-            editButton.translatesAutoresizingMaskIntoConstraints = false
-            deleteButton.translatesAutoresizingMaskIntoConstraints = false
-            addUsersButton.translatesAutoresizingMaskIntoConstraints = false
-            
-            //set UI elements zero rect
-            blurBackground.frame = CGRect.zero
-            editButton.frame = CGRect.zero
-            deleteButton.frame = CGRect.zero
-            addUsersButton.frame = CGRect.zero
-            
-            //set optiosn frame to superview's frame and add its subview buttons
-            self.optionsFrame.frame = CGRect(x: superView!.minX, y: superView!.minY, width: superView!.width, height: superView!.height)
-            self.optionsFrame.backgroundColor = colors.primaryColor2
-            self.optionsFrame.alpha = 0.5
-            optionsFrame.addSubview(editButton)
-            optionsFrame.addSubview(deleteButton)
-            optionsFrame.addSubview(addUsersButton)
-            blurBackground.contentView.addSubview(optionsFrame)
-            
-            //format edit button
-            editButton.setTitleColor(colors.accentColor1, for: .normal)
-            editButton.backgroundColor = colors.primaryColor1
-            editButton.setTitle("Edit", for: .normal)
-            editButton.layer.cornerRadius = 8
-            editButton.alpha = 0.5
-            editButton.addTarget(self, action: #selector(initiateEditEvent), for: .touchUpInside)
-            
-            //format add/remove user button
-            addUsersButton.setTitleColor(colors.accentColor1, for: .normal)
-            addUsersButton.backgroundColor = colors.primaryColor1
-            addUsersButton.setTitle("Add/remove users", for: .normal)
-            addUsersButton.titleLabel?.numberOfLines = 1
-            addUsersButton.titleLabel?.adjustsFontSizeToFitWidth = true
-            addUsersButton.titleLabel?.lineBreakMode = NSLineBreakMode.byClipping
-            addUsersButton.layer.cornerRadius = 8
-            addUsersButton.alpha = 0.5
-            addUsersButton.addTarget(self, action: #selector(manipulateUsers(sender:)), for: .touchUpInside)
-            
-            //format delete button
-            deleteButton.setTitleColor(UIColor.red, for: .normal)
-            deleteButton.backgroundColor = colors.primaryColor1
-            deleteButton.setTitle("Delete", for: .normal)
-            deleteButton.layer.cornerRadius = 8
-            deleteButton.alpha = 0.5
-            deleteButton.addTarget(self, action: #selector(deleteEvent), for: .touchUpInside)
-
-        }
+        //get Y position of setting button pressed
+        let superView = sender.superview?.convert(sender.superview!.bounds, to: view)
+        
+        //enable layout via constraints only
+        blurBackground.translatesAutoresizingMaskIntoConstraints = false
+        editButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteButton.translatesAutoresizingMaskIntoConstraints = false
+        addUsersButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        //set UI elements zero rect
+        blurBackground.frame = CGRect.zero
+        editButton.frame = CGRect.zero
+        deleteButton.frame = CGRect.zero
+        addUsersButton.frame = CGRect.zero
+        
+        //set optiosn frame to superview's frame and add its subview buttons
+        optionsFrame.frame = CGRect(x: superView!.minX, y: superView!.minY, width: superView!.width, height: superView!.height)
+        optionsFrame.backgroundColor = colors.primaryColor2
+        optionsFrame.alpha = 0.5
+        optionsFrame.addSubview(editButton)
+        optionsFrame.addSubview(deleteButton)
+        optionsFrame.addSubview(addUsersButton)
+        blurBackground.contentView.addSubview(optionsFrame)
+        
+        //format edit button
+        editButton.setTitleColor(colors.accentColor1, for: .normal)
+        editButton.backgroundColor = colors.primaryColor1
+        editButton.setTitle("Edit", for: .normal)
+        editButton.layer.cornerRadius = 8
+        editButton.alpha = 0.5
+        editButton.addTarget(self, action: #selector(initiateEditEvent), for: .touchUpInside)
+        
+        //format add/remove user button
+        addUsersButton.setTitleColor(colors.accentColor1, for: .normal)
+        addUsersButton.backgroundColor = colors.primaryColor1
+        addUsersButton.setTitle("Add/remove users", for: .normal)
+        addUsersButton.titleLabel?.numberOfLines = 1
+        addUsersButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        addUsersButton.titleLabel?.lineBreakMode = NSLineBreakMode.byClipping
+        addUsersButton.layer.cornerRadius = 8
+        addUsersButton.alpha = 0.5
+        addUsersButton.addTarget(self, action: #selector(manipulateUsers(sender:)), for: .touchUpInside)
+        
+        //format delete button
+        deleteButton.setTitleColor(UIColor.red, for: .normal)
+        deleteButton.backgroundColor = colors.primaryColor1
+        deleteButton.setTitle("Delete", for: .normal)
+        deleteButton.layer.cornerRadius = 8
+        deleteButton.alpha = 0.5
+        deleteButton.addTarget(self, action: #selector(deleteEvent), for: .touchUpInside)
 
         //animatte in manipulate event buttons, fading buttons in and background out with blur effect
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
@@ -277,80 +263,80 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     
     func displayEditOptions(sender: UIButton) {
-        self.editIdx = sender.tag
-        self.deleteIdx = sender.tag
+        editIdx = sender.tag
+        deleteIdx = sender.tag
         editLauncher.baseEventCollectionVC = self
         editLauncher.showMenu()
     }
     
     func initiateEditEvent(sender: UIButton){
         performSegue(withIdentifier: "editEvent", sender: self)
-        self.unblurView()
+        unblurView()
     }
     
     func initiateAddUser(sender: UIButton) {
         performSegue(withIdentifier: "addUser", sender: self)
-        self.unblurView()
+        unblurView()
     }
     
     func deleteEvent(sender: UIButton){
-        if userEventsController.removeEvent(user: self.userController, eventIdx: self.deleteIdx!) == false {
+        guard let userEventsController = userEventsController, let userController = userController else {return}
+        guard let deleteIdx = deleteIdx else {return}
+        
+        if userEventsController.removeEvent(user: userController, eventIdx: deleteIdx) == false {
             showAlert(msg: "delete")
         }
         //reload data must be executed by applications main thread to see results immediately
-        self.unblurView()
+        unblurView()
         
         DispatchQueue.main.async(execute: {
             self.eventCollectionView.reloadData()
         })
-        
     }
     
     func manipulateUsers(sender: UIButton) {
         
         //create instance of manipulateUsersVC for presentation to user
-        var manipulateUsersVC = ManipulateUsersController()
+        let manipulateUsersVC = ManipulateUsersController()
         
         //populate instance with dependent vars
-        manipulateUsersVC.userEventsController = self.userEventsController
-        manipulateUsersVC.userController = self.userController
-        manipulateUsersVC.currentEventIdx = self.editIdx
+        manipulateUsersVC.userEventsController = userEventsController
+        manipulateUsersVC.userController = userController
+        manipulateUsersVC.currentEventIdx = editIdx
         manipulateUsersVC.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
         
         //show modal VC
         present(manipulateUsersVC, animated: true, completion: nil)
-        
     }
     
     //send required information to destination VCs
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "displayList" {
+            guard let selectedIndexPath = sender as? IndexPath else {return}
+            guard let tabBarViewControllers = segue.destination as? UITabBarController else {return}
+            guard let viewControllers = tabBarViewControllers.viewControllers else {return}
             
-            let selectedIndexPath = sender as! IndexPath
-            let tabBarViewControllers = segue.destination as! UITabBarController
+            if let itemListVC = viewControllers[0] as? ItemListViewController {
+                itemListVC.userController = userController
+                itemListVC.currentEvent = userEventsController?.events[selectedIndexPath.item]
+            }
             
-            let itemListVC = tabBarViewControllers.viewControllers![0] as! ItemListViewController
-            itemListVC.userController = self.userController
-            itemListVC.currentEvent = self.userEventsController.events[selectedIndexPath.item]
-            
-            let messagingVC = tabBarViewControllers.viewControllers![1] as! MessagingViewController
-            messagingVC.userController = self.userController
-            messagingVC.event = self.userEventsController.events[selectedIndexPath.item]
-        
+            if let messagingVC = viewControllers[1] as? MessagingViewController {
+                messagingVC.userController = userController
+                messagingVC.event = userEventsController?.events[selectedIndexPath.item]
+            }
         } else if segue.identifier == "addEvent" {
-            
-            let destinationVC = segue.destination as! EventViewController
-            destinationVC.userController = self.userController
-            destinationVC.userEventsController = self.userEventsController
-        
+            if let destinationVC = segue.destination as? EventViewController {
+                destinationVC.userController = userController
+                destinationVC.userEventsController = userEventsController
+            }
         } else if segue.identifier == "editEvent" {
-            
-            let destinationVC = segue.destination as! EventViewController
-            destinationVC.userController = self.userController
-            destinationVC.userEventsController = self.userEventsController
-            destinationVC.editIdx = self.editIdx
-            
+            if let destinationVC = segue.destination as? EventViewController {
+                destinationVC.userController = userController
+                destinationVC.userEventsController = userEventsController
+                destinationVC.editIdx = editIdx
+            }
         }
     }
     
@@ -385,10 +371,8 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     //execute desired outcome based on specific MenuOption selected in MenuLauncher
     func executeMenuOption(option: MenuOption) {
-        if option.name == "Cancel" {
-            //cancel selected, do nothing
         
-        } else if option.name == "Add Event" {
+        if option.name == "Add Event" {
             //add requested, fire add event
             performSegue(withIdentifier: "addEvent", sender: self)
         
@@ -396,7 +380,10 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
             performSegue(withIdentifier: "editEvent", sender: self)
         
         } else if option.name == "Delete Event" {
-            if userEventsController.removeEvent(user: userController, eventIdx: self.deleteIdx!) == false {
+            guard let userEventsController = userEventsController, let userController = userController else {return}
+            guard let deleteIdx = deleteIdx else {return}
+            
+            if userEventsController.removeEvent(user: userController, eventIdx: deleteIdx) == false {
                 showAlert(msg: "delete")
             }
             
@@ -415,20 +402,13 @@ class EventCollectionViewController: UIViewController, UICollectionViewDelegate,
     
     //execute desired outcome based on specific NavOption selected in NavigationLauncher
     func executeNavOption(option: NavOption) {
-        
-        if option.name == "Cancel" {
-            
-            //cancel selected, do nothing
-        } else if option.name == "My Events" {
-            
-            //do nothing - already at events view
  
-        } else if option.name == "Logout" {
+        if option.name == "Logout" {
             
             //logout via firebase
             do {
                 try Auth.auth().signOut()
-                let welcomeViewController = self.storyboard?.instantiateViewController(withIdentifier: "InitialNavController")
+                let welcomeViewController = storyboard?.instantiateViewController(withIdentifier: "InitialNavController")
                 UIApplication.shared.keyWindow?.rootViewController = welcomeViewController
             } catch {
                 print("A logout error occured")
